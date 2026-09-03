@@ -1,0 +1,33 @@
+name: CI
+on:
+pull_request:
+branches: [main]
+push:
+branches: [main]
+
+job:
+build:
+runs-on: ubuntu-latest
+
+steps:
+- name: checkout code
+uses: actions/checkout@v4
+
+- name: set up python
+  uses: actions/setup-python@v5
+  with:
+    python-version: '3.13.14'
+
+- name: Install dependencies
+   run: |
+  python -m pip install --upgrade pip
+  if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+-name: Check Python syntax
+    run: |
+     python -m py_compile $(find . -name ".py" -not -path "./.git/") || echo "No Python files yet"
+
+ - name: Repo structure check
+    run: |
+      echo "Checking key folders exist..."
+      test -d docs && test -d sql && test -d reports && test -d src && echo "Structure OK"
