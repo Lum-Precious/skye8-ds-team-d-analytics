@@ -29,16 +29,5 @@ delivery row, not a fixed constant)
 • Before/after totals are printed at normalization time for
 verification (see pipeline output)
 
-Date convention
-Four raw formats appear: month-name (1-Jan-25), and numeric
-D/M/Y or M/D/Y slash formats which cannot be distinguished from
-each other when both components are ≤ 12.
-
-Rule applied:
-1. If a numeric component is > 12, it must be the day (no month
-exceeds 12) — resolved with certainty, tagged
-resolved_day_gt_12
-2. If both components are ≤ 12, day/month/year is assumed (stated
-fallback, not proof) — tagged fallback_assumed_DMY
-3. Every row is tagged with its resolution method; counts appear in
-reports/reconciliation.md
+Date convension:
+The date is in the format YYYY-MM-DD 
