@@ -2,7 +2,6 @@ import re
 import pandas as pd
 from datetime import date, datetime
 
-
 def normalize_date(raw):
     if raw is None or (isinstance(raw, float) and pd.isna(raw)):
         return None, "missing"
@@ -11,19 +10,22 @@ def normalize_date(raw):
 
     for fmt in ("%d-%b-%y", "%d-%b-%Y"):
         try:
-            return datetime.strptime(s, fmt).date(), "unambiguous_month_name"
+            return datetime.strptime(s, fmt).strftime("%Y-%m-%d"), "unambiguous_month_name"
         except ValueError:
             pass
 
     m = re.match(r"^(\d{1,2})/(\d{1,2})/(\d{4})$", s)
     if m:
         a, b, year = int(m.group(1)), int(m.group(2)), int(m.group(3))
+
         if a > 12 and b <= 12:
-            return date(year, b, a), "resolved_day_gt_12"
+            return date(year, b, a).strftime("%Y-%m-%d"), "resolved_day_gt_12"
+
         elif b > 12 and a <= 12:
-            return date(year, a, b), "resolved_day_gt_12"
+            return date(year, a, b).strftime("%Y-%m-%d"), "resolved_day_gt_12"
+
         elif a <= 12 and b <= 12:
-            return date(year, b, a), "fallback_assumed_DMY"
+            return date(year, b, a).strftime("%Y-%m-%d"), "fallback_assumed_DMY"
 
     return None, "unparsed"
 
